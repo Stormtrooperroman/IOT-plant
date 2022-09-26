@@ -1,0 +1,169 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Информация</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+        {% load static %}
+        <link rel="stylesheet" type="text/css" href="{% static 'iot/style.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'iot/toggle.css' %}">
+    </head>
+    <body>
+        <nav>
+            <div class="links">
+                <a href="">Главная страница</a>
+                <a href="data">Все данные</a>
+            </div>
+        </nav>
+        <div class="container">
+            <h1>
+                Информация
+            </h1>
+            <div>
+                
+                <div id="main" {% if data.error %} style="display: none;" {% endif %}>
+                    <div class="row">
+                        <div class="col">
+                            Температура воздуха:
+                        </div>
+                        <div class="col" id="air_temp">
+                            {% if not data.error %}{{ data.air_temp }} &#8451;{% endif %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            Влажность воздуха:
+                        </div>
+                        <div class="col" id="air_hum">
+                            {% if not data.error %}{{ data.air_hum }} %{% endif %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            Давление воздуха:
+                        </div>
+                        <div class="col" id="air_pres">
+                            {% if not data.error %}{{ data.air_pres }} мм рт. ст.{% endif %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            Освещённость:
+                        </div>
+                        <div class="col" id="light">
+                            {% if not data.error %}{{ data.light }} Лк.{% endif %}
+                        </div>
+                    </div>
+                    <div class="row" id="buttons_row">
+                        <div class="col">
+                            <button class="Toggle" id="led" type="button" {% if data.LED == "1"%} aria-pressed="true" {% endif %}>
+                                Вкл/Выкл свет
+                                <br>
+                                <span class="Toggle__display" hidden>
+                                    <svg width='18' height='14' viewBox='0 0 18 14' fill='none' xmlns='http://www.w3.org/2000/svg' aria-hidden="true" focusable="false" class="Toggle__icon Toggle__icon--checkmark">
+                                        <path d='M6.08471 10.6237L2.29164 6.83059L1 8.11313L6.08471 13.1978L17 2.28255L15.7175 1L6.08471 10.6237Z' fill='currentcolor' stroke='currentcolor' />
+                                    </svg>
+                                    <svg width='13' height='13' viewBox='0 0 13 13' fill='none' xmlns='http://www.w3.org/2000/svg' aria-hidden="true" focusable="false" class="Toggle__icon Toggle__icon--cross">
+                                        <path d='M11.167 0L6.5 4.667L1.833 0L0 1.833L4.667 6.5L0 11.167L1.833 13L6.5 8.333L11.167 13L13 11.167L8.333 6.5L13 1.833L11.167 0Z' fill='currentcolor' />
+                                    </svg>
+                                </span>
+                            </button>
+                        </div>
+                        <div class="col" id="water_div">
+                            <button class="Toggle" id="water" type="button">
+                                Добавить воды
+                                <br>
+                                <span id="Toggle_water" class="Toggle__display" hidden>
+                                    <svg width='18' height='14' viewBox='0 0 18 14' fill='none' xmlns='http://www.w3.org/2000/svg' aria-hidden="true" focusable="false" class="Toggle__icon Toggle__icon--checkmark">
+                                        <path d='M6.08471 10.6237L2.29164 6.83059L1 8.11313L6.08471 13.1978L17 2.28255L15.7175 1L6.08471 10.6237Z' fill='currentcolor' stroke='currentcolor' />
+                                    </svg>
+                                    
+                                     <svg width='13' height='13' viewBox='0 0 13 13' fill='none' xmlns='http://www.w3.org/2000/svg' aria-hidden="true" focusable="false" class="Toggle__icon Toggle__icon--cross">
+                                    </svg>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                    <div class="row error_row" {% if data.error %} style="display: none;" {% endif %}>
+                        <div class="col" id="error">
+                            {% if data.error %}{{ data.error }}{% endif %}
+                        </div>
+                    </div>         
+           </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+        <script type="text/javascript">
+            $("#led").click(function() {
+                $.ajax({
+                    method: "GET",
+                    url: "/light/",
+                })
+                .done(function( answer ) {
+                    if (answer["data"]["error"]) {
+                        $(".error_row").show();
+                        $("#main").hide();
+                        $("#error").html(answer["data"]["error"]);
+                    } else if (answer["data"]) {
+                        $(".error_row").hide();
+                        $("#main").show();
+                        if( answer["data"]["LED"] == "0") {
+                            $("#led").removeAttr('aria-pressed');
+                        } else {
+                            $("#led").attr('aria-pressed', 'true');
+                        }
+                    }
+                });
+            });
+            $("#water").click(function() {
+                $("#water").attr('aria-pressed', 'true');
+                $.ajax({
+                    method: "GET",
+                    url: "/water/",
+                })
+                .done(function( answer ) {
+                    if (answer["data"]["error"]) {
+                        $(".error_row").show();
+                        $("#main").hide();
+                        $("#error").html(answer["data"]["error"]);
+                    } else if (answer["data"]) {
+                        $(".error_row").hide();
+                        $("#main").show();
+                        
+                        setTimeout(()=>{
+                            $("#water").removeAttr('aria-pressed')
+                        }, 1000);
+                    }
+                });
+            });
+
+            setInterval(() => {
+                $.ajax({
+                    method: "GET",
+                    url: "/update/",
+                })
+                .done(function( answer ) {
+                    if (answer["data"]["error"]) {
+                        $(".error_row").show();
+                        $("#main").hide();
+                        $("#error").html(answer["data"]["error"]);
+                    } else {
+                        $(".error_row").hide();
+                        $("#main").show();
+                        data = answer["data"];
+                        $("#air_temp").html(data["air_temp"] + " &#8451;");
+                        $("#air_hum").html(data["air_hum"] + " %");
+                        $("#air_pres").html(data["air_pres"] + " мм рт. ст.");
+                        $("#light").html(data["light"] + " Лк");
+                        if( data["LED"] == "0") {
+                            $("#led").removeAttr('aria-pressed');
+                        } else {
+                            $("#led").attr('aria-pressed', 'true');
+                        }
+                    }
+                });
+            }, 60000);
+        </script>
+    </body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Все данные</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+        {% load static %}
+        {% load tz %}
+        <link rel="stylesheet" type="text/css" href="{% static 'iot/style.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'iot/toggle.css' %}">
+    </head>
+    <body>
+        <nav>
+            <div class="links">
+                <a href="..">Главная страница</a>
+                <a href="#">Все данные</a>
+            </div>
+        </nav>
+        <div class="container">
+            <h1>
+                Последние 10 измерений
+            </h1>
+            <div class="row">
+                <div class="col">
+                    Температура воздуха
+                </div>
+                <div class="col">
+                    Влажность воздуха
+                </div>
+                <div class="col">
+                    Давление воздуха
+                </div>
+                <div class="col">
+                    Освещённость
+                </div>
+                <div class="col">
+                    Время измерения
+                </div>
+            </div>
+            {% for last_info in lastest_info_list %}
+                <div class="row">
+                    <div class="col">
+                        {{ last_info.air_temp }} &#8451;
+                    </div>
+                    <div class="col">
+                        {{ last_info.air_hum }} %
+                    </div>
+                    <div class="col">
+                        {{ last_info.air_pres }} мм рт. ст.
+                    </div>
+                    <div class="col">
+                        {{ last_info.light }} Лк
+                    </div>
+                    <div class="col">
+                        {{ last_info.get_date }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </body>
+<html>

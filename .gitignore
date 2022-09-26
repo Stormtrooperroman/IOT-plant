@@ -1,0 +1,4 @@
+houseenv
+*/__pycache__
+*/migrations
+house/settings.py

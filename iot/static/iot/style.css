@@ -1,0 +1,84 @@
+* {
+    font-size: 15pt;
+}
+
+h1{
+    font-size: 30pt;
+}
+
+nav {
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 1.5rem 2rem;
+    background-color: #eaeaea;
+    z-index: 1;
+}
+.links {
+    display: flex;
+    margin: 0 -1em;
+}
+
+.links a {
+    display: inline-block;
+    margin: 0 1em;
+}
+
+nav a {
+    color: #0f0f0f;
+    text-decoration: none;
+    font-size: 0.9rem;
+    letter-spacing: 0.2em;
+}
+
+.container {
+    text-align: center;
+    padding: 10px;
+    max-width: 900px;
+    position:relative;;
+    margin:0 auto;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    border: solid black;
+    border-width: 0 0 2px 0;
+    margin 5px 0 5px 0;
+}
+
+#buttons_row {
+    border-width: 0 0 0 0;
+}
+
+.row .col {
+    margin: 20px;
+    width: 300px;
+}
+
+.error_row {
+    justify-content: center;
+    border-width: 0 0 0 0;
+}
+
+#water_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#Toggle_water {
+    background-color: #d4f1f9;
+}
+
+@media (max-width: 600px) {
+.container {
+    width: 310px;
+}
+.row .col {
+    width: 140px;
+    margin: 10px 0 10px 0;
+}
+}
